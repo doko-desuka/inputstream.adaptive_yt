@@ -58,14 +58,15 @@ jobs:
           cd build
           cmake --build . --config Release -- /m
 
-      - name: Debug workspace tree
-        run: |
-          Write-Host "Workspace:"
-          Get-ChildItem build_zips -Depth 2
+      #- name: Debug workspace tree
+      #  run: |
+      #    Write-Host "Workspace:"
+      #    Get-ChildItem xbmc/cmake/addons/output/addons -Depth 4
 
       # Without a trailing slash on the path, it will upload the folder itself.
+      # Artifact is already named with ".zip".
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ADDON_ID }}_windows_msvc.zip
+          name: ${{ env.ADDON_ID }}_windows_msvc
           path: xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}
