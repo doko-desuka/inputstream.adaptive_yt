@@ -1,0 +1,54 @@
+name: Build Addon (Windows - Leia)
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  ADDON_ID: inputstream.adaptive_yt
+  KODI_BRANCH: Leia
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout addon
+      uses: actions/checkout@v4
+      with:
+        path: addon
+
+    - name: Checkout Kodi Leia
+      uses: actions/checkout@v4
+      with:
+        repository: xbmc/xbmc
+        ref: ${{ env.KODI_BRANCH }}
+        path: xbmc
+
+    - name: Enable MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Configure
+      run: |
+        cd addon
+        mkdir build
+        cd build
+        cmake -A x64 `
+          -DADDONS_TO_BUILD=${{ env.ADDON_ID }} `
+          -DADDON_SRC_PREFIX=${{ github.workspace }} `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\xbmc\addons `
+          -DPACKAGE_ZIP=1 `
+          -DPACKAGE_DIR=${{ github.workspace }}\build_zips `
+          ${{ github.workspace }}\xbmc\cmake\addons
+
+    - name: Build
+      run: |
+        cd addon/build
+        cmake --build . --config Release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ADDON_ID }}-windows-x64
+        path: build_zips/*.zip
