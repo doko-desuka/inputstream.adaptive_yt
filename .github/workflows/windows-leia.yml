@@ -34,6 +34,9 @@ jobs:
         mkdir build
         cd build
         cmake -A x64 `
+          -DENABLE_ADDONS=OFF `
+          -DADDONS_DEPRECATED=OFF `
+          -DADDONS_TO_EXCLUDE=all `
           -DADDONS_TO_BUILD=${{ env.ADDON_ID }} `
           -DADDON_SRC_PREFIX=${{ github.workspace }} `
           -DCMAKE_BUILD_TYPE=Release `
