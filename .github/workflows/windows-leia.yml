@@ -24,22 +24,13 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
-      - name: Cache addon depends
-        uses: actions/cache@v4
-        with:
-          path: xbmc/cmake/addons/depends/build
-          key: windows-leia-depends-${{ hashFiles('xbmc/cmake/addons/depends/**') }}
-          restore-keys: |
-            windows-leia-depends-
-
-      - name: Cache addon external project build
+      - name: Restore Kodi Depends Cache
         uses: actions/cache@v4
         with:
           path: |
-            build/${{ env.ADDON_ID }}-prefix
-          key: windows-leia-addonbuild-${{ hashFiles('addon/${{ env.ADDON_ID }}/**') }}
-          restore-keys: |
-            windows-leia-addonbuild-
+            build/build
+            build/inputstream.adaptive_yt-prefix
+          key: ${{ env.ADDON_ID }}-deps-${{ hashFiles('addon/**') }}
 
       #- name: Debug workspace tree
       #  run: |
@@ -78,16 +69,9 @@ jobs:
         run: |
           Write-Host "Workspace:"
           Get-ChildItem ${{ github.workspace }} -Depth 2
-
-      - name: Package ZIP
-        run: |
-          mkdir build_zips
-          powershell Compress-Archive `
-            -Path xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}/* `
-            -DestinationPath build_zips/${{ env.ADDON_ID }}_windows_msvc.zip
       
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: inputstream.adaptive_yt_windows_msvc
-          path: build_zips/*.zip
+          name: ${{ env.ADDON_ID }}_windows_msvc
+          path: xbmc/cmake/addons/output/addons/*.zip
