@@ -27,13 +27,13 @@ jobs:
       - name: Create build directory
         run: mkdir build -Force
 
-      - name: Restore Kodi Depends Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            build/build
-            build/${{ env.ADDON_ID }}-prefix
-          key: ${{ env.ADDON_ID }}-deps-${{ hashFiles('addon/**') }}
+      #- name: Restore Kodi Depends Cache
+      #  uses: actions/cache@v4
+      #  with:
+      #    path: |
+      #      build/build
+      #      build/${{ env.ADDON_ID }}-prefix
+      #    key: ${{ env.ADDON_ID }}-deps-${{ hashFiles('addon/**') }}
 
       #- name: Debug workspace tree
       #  run: |
@@ -58,10 +58,10 @@ jobs:
             -DENABLE_ADDONS=OFF `
             -DBUILD_BUNDLED_ADDONS=OFF `
             -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
-            -DADDON_SRC_PREFIX="${{ github.workspace }}\addon" `
+            -DADDON_SRC_PREFIX="${{ github.workspace }}/addon" `
             -DPACKAGE_ZIP=1 `
-            -DPACKAGE_DIR="${{ github.workspace }}\build_zips"
-            "${{ github.workspace }}\xbmc\cmake\addons"
+            -DPACKAGE_DIR="${{ github.workspace }}/build_zips"
+            "${{ github.workspace }}/xbmc/cmake/addons"
 
       - name: Build Addon
         run: |
