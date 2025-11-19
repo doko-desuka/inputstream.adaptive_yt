@@ -47,7 +47,7 @@ jobs:
             -A x64 `
             -DENABLE_ADDONS=OFF `
             -DBUILD_BUNDLED_ADDONS=OFF `
-            -DADDONS_TO_BUILD="${{ env:ADDON_ID }}" `
+            -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
             -DADDON_SRC_PREFIX="${{ github.workspace }}\${{ env.ADDON_ID }}" `
             -DPACKAGE_ZIP=1 `
             -DPACKAGE_DIR="${{ github.workspace }}\build_zips" `
