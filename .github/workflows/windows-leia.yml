@@ -61,22 +61,10 @@ jobs:
       - name: Debug workspace tree
         run: |
           Write-Host "Workspace:"
-          Get-ChildItem xbmc/cmake/addons/output -Depth 4
+          Get-ChildItem build_zips -Depth 2
       
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ADDON_ID }}_windows_msvc
-          path: xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}/*.zip
-
-      - name: Package ZIP
-        run: |
-          powershell Compress-Archive `
-            -Path xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}/* `
-            -DestinationPath build_zips/${{ env.ADDON_ID }}_windows_msvc_02.zip
-      
-      - name: Upload ZIP Artifact 2
-        uses: actions/upload-artifact@v4
-        with:
-          name: inputstream.adaptive_yt_windows_msvc_02.zip
-          path: build_zips/*.zip
+          name: ${{ env.ADDON_ID }}_windows_msvc.zip
+          path: xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}
