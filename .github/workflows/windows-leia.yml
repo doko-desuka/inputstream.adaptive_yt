@@ -24,17 +24,6 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
-      #- name: Create build directory
-      #  run: mkdir build -Force
-
-      #- name: Restore Kodi Depends Cache
-      #  uses: actions/cache@v4
-      #  with:
-      #    path: |
-      #      build/build
-      #      build/${{ env.ADDON_ID }}-prefix
-      #    key: ${{ env.ADDON_ID }}-deps-${{ hashFiles('addon/**') }}
-
       - name: Debug workspace tree
         run: |
           Write-Host "Workspace:"
@@ -42,7 +31,7 @@ jobs:
 
       - name: Create addon definition file for custom addon ID
         run: |
-          $addonDefDir = "${{ github.workspace }}\xbmc\cmake\addons\addons"
+          $addonDefDir = "${{ github.workspace }}/xbmc/cmake/addons/addons"
           New-Item -ItemType Directory -Path $addonDefDir -Force | Out-Null
           $filePath = Join-Path $addonDefDir "${{ env.ADDON_ID }}.txt"
           Set-Content -Path $filePath -Value "inputstream.adaptive_yt https://github.com/doko-desuka/inputstream.adaptive_yt/ Leia"
@@ -59,10 +48,10 @@ jobs:
             -DENABLE_ADDONS=OFF `
             -DBUILD_BUNDLED_ADDONS=OFF `
             -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
-            -DADDON_SRC_PREFIX="${{ github.workspace }}\addon" `
+            -DADDON_SRC_PREFIX="${{ github.workspace }}/addon" `
             -DPACKAGE_ZIP=1 `
-            -DPACKAGE_DIR="${{ github.workspace }}\build_zips"
-            "${{ github.workspace }}\xbmc\cmake\addons"
+            -DPACKAGE_DIR="${{ github.workspace }}/build_zips"
+            "${{ github.workspace }}/xbmc/cmake/addons"
 
       - name: Build Addon
         run: |
