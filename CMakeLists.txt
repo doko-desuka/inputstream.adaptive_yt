@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(inputstream.adaptive)
+project(inputstream.adaptive_yt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
@@ -89,7 +89,7 @@ list(APPEND DEPLIBS bento4)
 list(APPEND DEPLIBS mpegts)
 list(APPEND DEPLIBS webm_parser)
 
-build_addon(inputstream.adaptive ADP DEPLIBS)
+build_addon(inputstream.adaptive_yt ADP DEPLIBS)
 
 include(CPack)
 
