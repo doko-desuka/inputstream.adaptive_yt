@@ -72,10 +72,17 @@ jobs:
       - name: Build Addon
         run: |
           cd build
-          cmake --build . --config Release --target addon
+          cmake --build . --config Release
 
-      - name: Upload ZIP artifact
+      - name: Package ZIP
+        run: |
+          mkdir build_zips
+          powershell Compress-Archive `
+            -Path xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}/* `
+            -DestinationPath build_zips/${{ env.ADDON_ID }}_windows_msvc.zip
+      
+      - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ADDON_ID }}_windows_msvc.zip
-          path: build/addons/${{ env.ADDON_ID }}/*.zip
+          name: inputstream.adaptive_yt_windows_msvc.zip
+          path: build_zips/*.zip
