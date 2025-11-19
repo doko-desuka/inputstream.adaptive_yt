@@ -74,6 +74,11 @@ jobs:
           cd build
           cmake --build . --config Release
 
+      - name: Debug workspace tree
+        run: |
+          Write-Host "Workspace:"
+          Get-ChildItem ${{ github.workspace }} -Depth 2
+
       - name: Package ZIP
         run: |
           mkdir build_zips
