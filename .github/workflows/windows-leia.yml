@@ -63,10 +63,11 @@ jobs:
       #    Write-Host "Workspace:"
       #    Get-ChildItem xbmc/cmake/addons/output/addons -Depth 4
 
-      # Without a trailing slash on the path, it will upload the folder itself.
-      # Artifact is already named with ".zip".
+      # Package into a ZIP (only needed on Windows runs, as the Kodi
+      # build for some reason won't package it already).
+      # Artifact is automatically given a ".zip" extension.
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ADDON_ID }}_windows_msvc
-          path: xbmc/cmake/addons/output/addons/${{ env.ADDON_ID }}
+          path: xbmc/cmake/addons/output/addons/*
