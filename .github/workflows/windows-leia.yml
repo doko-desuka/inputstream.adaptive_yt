@@ -24,6 +24,9 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
+      - name: Create build directory
+        run: mkdir build
+
       - name: Restore Kodi Depends Cache
         uses: actions/cache@v4
         with:
@@ -57,18 +60,17 @@ jobs:
             -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
             -DADDON_SRC_PREFIX="${{ github.workspace }}\addon" `
             -DPACKAGE_ZIP=1 `
-            -DPACKAGE_DIR="${{ github.workspace }}\build_zips" `
             "${{ github.workspace }}\xbmc\cmake\addons"
 
       - name: Build Addon
         run: |
           cd build
-          cmake --build . --config Release
+          cmake --build . --config Release -- /m
 
       - name: Debug workspace tree
         run: |
           Write-Host "Workspace:"
-          Get-ChildItem ${{ github.workspace }} -Depth 2
+          Get-ChildItem ${{ github.workspace }} -Depth 3
       
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
