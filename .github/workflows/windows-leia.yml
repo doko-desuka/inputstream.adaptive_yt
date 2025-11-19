@@ -51,6 +51,7 @@ jobs:
       - name: Configure CMake
         run: |
           mkdir build_zips -Force
+          mkdir build -Force
           cd build
           cmake `
             -G "Visual Studio 17 2022" `
