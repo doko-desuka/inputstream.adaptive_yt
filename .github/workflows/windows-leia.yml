@@ -50,7 +50,7 @@ jobs:
             -DADDON_SRC_PREFIX="${{ github.workspace }}" `
             -DPACKAGE_ZIP=1 `
             -DPACKAGE_DIR="${{ github.workspace }}\build_zips" `
-            "${{ github.workspace }}\xbmc\cmake\addons"
+            "${{ github.workspace }}\xbmc\cmake"
 
       - name: Build Addon
         run: |
