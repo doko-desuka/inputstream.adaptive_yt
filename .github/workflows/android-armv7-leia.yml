@@ -1,0 +1,79 @@
+name: Build Android ARMv7
+
+on:
+  workflow_dispatch:
+
+env:
+  ADDON_ID: inputstream.adaptive.custom
+  KODI_BRANCH: Leia
+  NDK_VERSION: r17c
+  ANDROID_API: 21
+
+jobs:
+  build-android-armv7:
+    name: Android ARMv7 Build
+    runs-on: ubuntu-20.04
+
+    steps:
+    # 1. Checkout addon
+    - name: Checkout addon repo
+      uses: actions/checkout@v4
+      with:
+        path: ${{ env.ADDON_ID }}
+
+    # 2. Checkout Kodi
+    - name: Checkout Kodi Leia
+      uses: actions/checkout@v4
+      with:
+        repository: xbmc/xbmc
+        ref: ${{ env.KODI_BRANCH }}
+        path: xbmc
+
+    # 3. Install tools
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake libtool gperf zip unzip \
+          g++ make python3 default-jre pkg-config wget
+
+    # 4. Download NDK r17c
+    - name: Download Android NDK r17c
+      run: |
+        wget https://dl.google.com/android/repository/android-ndk-${{ env.NDK_VERSION }}-linux-x86_64.zip
+        unzip android-ndk-${{ env.NDK_VERSION }}-linux-x86_64.zip
+        mv android-ndk-${{ env.NDK_VERSION }} $HOME/android-ndk
+
+    # 5. Build Kodi Android toolchain
+    - name: Build Kodi depends toolchain (Android ARMv7)
+      run: |
+        cd xbmc/tools/depends
+        ./bootstrap
+        ./configure \
+          --host=arm-linux-androideabi \
+          --with-ndk-path=$HOME/android-ndk \
+          --with-sdk-path=$HOME/android-sdk \
+          --prefix=$HOME/kodi-depends-android
+        make -j$(nproc)
+
+    # 6. Build the addon
+    - name: Build custom addon (Android)
+      env:
+        PATH: $HOME/kodi-depends-android/bin:$PATH
+        ADDON_SRC_PREFIX: ${{ github.workspace }}
+      run: |
+        cd xbmc/tools/depends/target/binary-addons
+        echo "${ADDON_ID}" > addons.txt
+        make -j$(nproc) ADDONS="${ADDON_ID}" TARGET=arm-linux-androideabi
+
+    # 7. Collect artifacts
+    - name: Package Android artifact
+      run: |
+        mkdir -p artifacts
+        find xbmc/tools/depends/target/binary-addons -name "*.zip" -exec cp {} artifacts/ \;
+
+    # 8. Upload artifact
+    - name: Upload Android Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ADDON_ID }}-android-armv7
+        path: artifacts/*.zip
