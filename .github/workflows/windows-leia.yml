@@ -62,7 +62,8 @@ jobs:
         run: |
           Write-Host "Workspace:"
           Get-ChildItem build_zips -Depth 2
-      
+
+      # Without a trailing slash on the path, it will upload the folder itself.
       - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
