@@ -24,6 +24,23 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
+      - name: Cache addon depends
+        uses: actions/cache@v4
+        with:
+          path: xbmc/cmake/addons/depends/build
+          key: windows-leia-depends-${{ hashFiles('xbmc/cmake/addons/depends/**') }}
+          restore-keys: |
+            windows-leia-depends-
+
+      - name: Cache addon external project build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/${{ env.ADDON_ID }}-prefix
+          key: windows-leia-addonbuild-${{ hashFiles('addon/${{ env.ADDON_ID }}/**') }}
+          restore-keys: |
+            windows-leia-addonbuild-
+
       #- name: Debug workspace tree
       #  run: |
       #    Write-Host "Workspace:"
@@ -36,11 +53,6 @@ jobs:
           $filePath = Join-Path $addonDefDir "${{ env.ADDON_ID }}.txt"
           Set-Content -Path $filePath -Value "inputstream.adaptive_yt https://github.com/doko-desuka/inputstream.adaptive_yt/ Leia"
           Write-Host "Created addon definition file: $filePath"
-
-      - name: Debug workspace tree
-        run: |
-          Write-Host "Workspace:"
-          Get-ChildItem ${{ github.workspace }} -Depth 2
 
       - name: Configure CMake
         run: |
@@ -60,10 +72,10 @@ jobs:
       - name: Build Addon
         run: |
           cd build
-          cmake --build . --config Release
+          cmake --build . --config Release --target PACKAGE
 
       - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ADDON_ID }}_windows_msvc.zip
-          path: build_zips
+          path: build/addons/zips/**/*
