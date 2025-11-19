@@ -52,7 +52,7 @@ jobs:
             -DENABLE_ADDONS=OFF `
             -DBUILD_BUNDLED_ADDONS=OFF `
             -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
-            -DADDON_SRC_PREFIX="${{ github.workspace }}\addon" `
+            -DADDON_SRC_PREFIX="${{ github.workspace }}" `
             -DPACKAGE_ZIP=1 `
             -DPACKAGE_DIR="${{ github.workspace }}\build_zips" `
             "${{ github.workspace }}\xbmc\cmake\addons"
