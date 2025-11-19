@@ -60,6 +60,7 @@ jobs:
             -DADDONS_TO_BUILD="${{ env.ADDON_ID }}" `
             -DADDON_SRC_PREFIX="${{ github.workspace }}\addon" `
             -DPACKAGE_ZIP=1 `
+            -DPACKAGE_DIR="${{ github.workspace }}\build_zips"
             "${{ github.workspace }}\xbmc\cmake\addons"
 
       - name: Build Addon
