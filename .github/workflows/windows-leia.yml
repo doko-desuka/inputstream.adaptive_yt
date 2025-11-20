@@ -25,6 +25,14 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
+      - name: Extract Addon Version
+        id: get_version
+        run: |
+          [xml]$xml = Get-Content "${{ github.workspace }}/addon/${{ env.ADDON_ID }}/addon.xml"
+          $version = $xml.addon.version
+          Write-Host "Extracted ${{ env.ADDON_ID }} version $version"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
       #- name: Debug workspace tree
       #  run: |
       #    Write-Host "Workspace:"
@@ -67,13 +75,6 @@ jobs:
       #  run: |
       #    Write-Host "Workspace:"
       #    Get-ChildItem xbmc/cmake/addons/output/addons -Depth 4
-
-      - name: Extract Addon Version
-        id: get_version
-        run: |
-          [xml]$xml = Get-Content "${{ github.workspace }}/addon/${{ env.ADDON_ID }}/addon.xml"
-          $version = $xml.addon.version
-          echo "version=$version" >> $env:GITHUB_OUTPUT
 
       # Package the add-on folder into a ZIP (only needed on Windows
       # runs as the Kodi builder won't package it for some reason).
