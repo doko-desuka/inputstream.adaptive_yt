@@ -31,7 +31,7 @@ jobs:
         run: |
           $content = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in" -Raw
           $content -match 'version\s*=\s*"([^"]+)"'
-          $version = [string]$matches[1]
+          $version = $matches[1].ToString()
           Write-Host "Extracted ${{ env.ADDON_ID }} version ""$version"""
           echo "version=$version" >> $env:GITHUB_OUTPUT
 
