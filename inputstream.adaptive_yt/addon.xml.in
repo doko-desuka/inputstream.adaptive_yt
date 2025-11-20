@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.adaptive_yt"
-  version="2.4.8"
+  version="1"
   name="InputStream Adaptive YouTube"
-  provider-name="peak3d">
+  provider-name="peak3d etc">
   <requires>@ADDON_DEPENDS@</requires>
   <extension
     point="kodi.inputstream"
