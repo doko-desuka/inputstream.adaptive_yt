@@ -66,17 +66,17 @@ jobs:
           Set-Content -Path $filePath -Value "inputstream.adaptive_yt https://github.com/doko-desuka/inputstream.adaptive_yt/ Leia"
           Write-Host "Created addon definition file: $filePath"
 
-      - name: Install MSVC v141 toolset
-        run: |
-          & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" `
-            modify `
-            --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" `
-            --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 `
-            --quiet --norestart
+      #- name: Install MSVC v141 toolset
+      #  run: |
+      #    & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" `
+      #      modify `
+      #      --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" `
+      #      --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 `
+      #      --quiet --norestart
 
       # Windows 8:
       # - Added CMAKE_SYSTEM_VERSION=6.2
-      # - T v141 (should be v141 but not present anymore in Github Actions)
+      # - T v142 (should be v141 but not present anymore in Github Actions)
       - name: Configure CMake
         run: |
           mkdir build_zips
@@ -84,7 +84,7 @@ jobs:
           cd build
           cmake `
             -G "Visual Studio 17 2022" `
-            -T v141 `
+            -T v142 `
             -A x64 `
             -DCMAKE_SYSTEM_VERSION=6.2 `
             -DENABLE_ADDONS=OFF `
