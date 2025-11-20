@@ -47,7 +47,6 @@ jobs:
 
       # Windows 8:
       # - Added CMAKE_SYSTEM_VERSION=6.2
-      # - Changed G from "Visual Studio 17 2022" to "Visual Studio 15 2017"
       - name: Configure CMake
         run: |
           mkdir build_zips
