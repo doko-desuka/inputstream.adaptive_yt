@@ -12,12 +12,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Kodi repo (Leia)
+      - name: Restore XBMC cache
+        uses: actions/cache@v4
+        id: xbmc-cache
+        with:
+          path: xbmc
+          key: xbmc-leia-src-sparse-v1
+
+      - name: Checkout Kodi repo (Leia, sparse)
+        if: steps.xbmc-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
           repository: xbmc/xbmc
           ref: Leia
           path: xbmc
+          sparse-checkout: |
+            cmake
+            addons
+            tools
+          sparse-checkout-cone-mode: false
+
+      # Only when doing a checkout of xbmc. Cleans unnecessary things.
+      - name: Strip .git from cached copy
+        if: steps.xbmc-cache.outputs.cache-hit != 'true'
+        run: Remove-Item -Path "xbmc/.git" -Recurse -Force
 
       - name: Checkout addon repo
         uses: actions/checkout@v4
