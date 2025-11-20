@@ -30,7 +30,7 @@ jobs:
         # {workspace}/addon/{ADDON_ID}/{ADDON_ID}/addon.xml.in
         run: |
           $content = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in" -Raw
-          $match = [regex]::Match($content, 'version\s*=\s*"([^"]+)"')
+          $match = [regex]::Match($content, '<addon[^>]*version\s*=\s*"([^"]+)"')
           $version = $match.Groups[1].Value
           Write-Host "Extracted ${{ env.ADDON_ID }} version ""$version"""
           echo "version=$version" >> $env:GITHUB_OUTPUT
@@ -69,12 +69,12 @@ jobs:
             -DPACKAGE_DIR="${{ github.workspace }}/build_zips" `
             "${{ github.workspace }}/xbmc/cmake/addons"
 
-      # MSVC params: /MP = multi-process parallel build
+      # MSVC params: /m = parallel build?
       #              /w = suppress all warnings (not recommended)
       - name: Build Addon
         run: |
           cd build
-          cmake --build . --config Release -- /MP /w
+          cmake --build . --config Release -- /m /w
 
       #- name: Debug workspace tree
       #  run: |
