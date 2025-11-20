@@ -29,8 +29,9 @@ jobs:
         # The file is located in here:
         # {workspace}/addon/{ADDON_ID}/{ADDON_ID}/addon.xml.in
         run: |
-          [xml]$xml = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in"
-          $version = $xml.addon.version
+          $content = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in" -Raw
+          $content -match 'version\s*=\s*"([^"]+)"'
+          $version = $matches[1]
           Write-Host "Extracted ${{ env.ADDON_ID }} version $version"
           echo "version=$version" >> $env:GITHUB_OUTPUT
 
