@@ -31,8 +31,8 @@ jobs:
         run: |
           $content = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in" -Raw
           $content -match 'version\s*=\s*"([^"]+)"'
-          $version = $matches[1]
-          Write-Host "Extracted ${{ env.ADDON_ID }} version $version"
+          $version = [string]$matches[1]
+          Write-Host "Extracted ${{ env.ADDON_ID }} version ""$version"""
           echo "version=$version" >> $env:GITHUB_OUTPUT
 
       #- name: Debug workspace tree
@@ -50,6 +50,7 @@ jobs:
 
       # Windows 8:
       # - Added CMAKE_SYSTEM_VERSION=6.2
+      # - T v142 (should be v141 but not present anymore in Github Actions)
       - name: Configure CMake
         run: |
           mkdir build_zips
@@ -57,7 +58,7 @@ jobs:
           cd build
           cmake `
             -G "Visual Studio 17 2022" `
-            -T v141 `
+            -T v142 `
             -A x64 `
             -DCMAKE_SYSTEM_VERSION=6.2 `
             -DENABLE_ADDONS=OFF `
