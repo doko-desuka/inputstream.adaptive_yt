@@ -69,7 +69,7 @@ jobs:
             -DPACKAGE_DIR="${{ github.workspace }}/build_zips" `
             "${{ github.workspace }}/xbmc/cmake/addons"
 
-      # MSVC params: /m = parallel build
+      # MSVC params: /MP = multi-process parallel build
       #              /w = suppress all warnings (not recommended)
       - name: Build Addon
         run: |
