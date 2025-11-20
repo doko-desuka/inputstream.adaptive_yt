@@ -24,15 +24,12 @@ jobs:
         with:
           path: addon/${{ env.ADDON_ID }}
 
-      - name: Debug workspace tree
-        run: |
-          Write-Host "Workspace:"
-          Get-ChildItem ${{ github.workspace }} -Depth 3
-
       - name: Extract Addon Version
         id: get_version
+        # The file is located in here:
+        # {workspace}/addon/{ADDON_ID}/{ADDON_ID}/addon.xml.in
         run: |
-          [xml]$xml = Get-Content "addon/${{ env.ADDON_ID }}/addon.xml"
+          [xml]$xml = Get-Content "addon/${{ env.ADDON_ID }}/${{ env.ADDON_ID }}/addon.xml.in"
           $version = $xml.addon.version
           Write-Host "Extracted ${{ env.ADDON_ID }} version $version"
           echo "version=$version" >> $env:GITHUB_OUTPUT
