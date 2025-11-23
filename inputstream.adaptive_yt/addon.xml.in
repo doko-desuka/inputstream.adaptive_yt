@@ -7,7 +7,7 @@
   <requires>@ADDON_DEPENDS@</requires>
   <extension
     point="kodi.inputstream"
-    name="adaptive"
+    name="adaptive_yt"
     extension=""
     tags="true"
     listitemprops="license_type|license_key|license_data|license_flags|manifest_type|server_certificate|stream_headers|manifest_update_parameter|original_audio_language|media_renewal_url|media_renewal_time|max_bandwidth|play_timeshift_buffer"
