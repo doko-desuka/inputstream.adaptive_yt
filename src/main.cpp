@@ -272,13 +272,6 @@ bool adaptive::AdaptiveTree::download(const char* url,
   if (!file.CURLCreate(url))
     return false;
 
-  // =========================================================
-  // On mobile Android with adaptiveFormats, it sends a fixed payload of "x\u0000" == "x\x00";
-  // However, Kodi requires it to be set as Base64: "eAA="
-  // Relevant code: https://github.com/xbmc/xbmc/blob/Leia/xbmc/filesystem/CurlFile.cpp#L819
-  file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "postdata", "eAA=");
-  // =========================================================
-
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "seekable", "0");
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "acceptencoding", "gzip");
 
@@ -332,6 +325,14 @@ RETRY:
   // open the file
   if (!file.CURLCreate(url))
     return false;
+  
+  // =========================================================
+  // On mobile Android with adaptiveFormats, it sends a fixed payload of "x\u0000" == "x\x00";
+  // However, Kodi requires it to be set as Base64: "eAA="
+  // Relevant code: https://github.com/xbmc/xbmc/blob/Leia/xbmc/filesystem/CurlFile.cpp#L819
+  file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "postdata", "eAA=");
+  // =========================================================
+
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "seekable", "0");
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "acceptencoding", "gzip, deflate");
   if (mediaHeaders.find("connection") == mediaHeaders.end())
