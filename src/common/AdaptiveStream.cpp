@@ -301,6 +301,7 @@ bool AdaptiveStream::prepareDownload(const AdaptiveTree::Segment* seg)
   if (observer_ && seg != &current_rep_->initialization_ && ~seg->startPTS_)
     observer_->OnSegmentChanged(this);
 
+  /*
   char rangebuf[128], *rangeHeader(0);
 
   if (!(current_rep_->flags_ & AdaptiveTree::Representation::SEGMENTBASE))
@@ -357,15 +358,24 @@ bool AdaptiveStream::prepareDownload(const AdaptiveTree::Segment* seg)
       rangeHeader = rangebuf;
     }
   }
-
+  */
+  uint64_t fileOffset = seg != &current_rep_->initialization_ ? m_segmentFileOffset : 0;
+  if (~seg->range_begin_) {
+    uint64_t rangeStart = seg->range_begin_ + fileOffset;
+    uint64_t rangeEnd   = seg->range_end_ + fileOffset;
+    download_url_ = current_rep_->url_ + "&range=" + std::to_string(rangeStart) + "-" + std::to_string(rangeEnd);
+  } else {
+    return false;
+  }
   download_segNum_ = current_rep_->startNumber_ + current_rep_->get_segment_pos(seg);
   download_pssh_set_ = seg->pssh_set_;
   download_headers_ = media_headers_;
+  /*
   if (rangeHeader)
     download_headers_["Range"] = rangeHeader;
   else
     download_headers_.erase("Range");
-
+  */
   download_url_ = tree_.BuildDownloadUrl(download_url_);
 
   return true;
