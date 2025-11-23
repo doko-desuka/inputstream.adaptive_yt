@@ -12,30 +12,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Restore XBMC cache
-        uses: actions/cache@v4
-        id: xbmc-cache
-        with:
-          path: xbmc
-          key: xbmc-leia-src-sparse-v1
-
-      - name: Checkout Kodi repo (Leia, sparse)
-        if: steps.xbmc-cache.outputs.cache-hit != 'true'
+      - name: Checkout Kodi repo (Leia)
         uses: actions/checkout@v4
         with:
           repository: xbmc/xbmc
           ref: Leia
           path: xbmc
-          sparse-checkout: |
-            cmake
-            addons
-            tools
-          sparse-checkout-cone-mode: false
-
-      # Only when doing a checkout of xbmc. Cleans unnecessary things.
-      - name: Strip .git from cached copy
-        if: steps.xbmc-cache.outputs.cache-hit != 'true'
-        run: Remove-Item -Path "xbmc/.git" -Recurse -Force
 
       - name: Checkout addon repo
         uses: actions/checkout@v4
@@ -52,7 +34,7 @@ jobs:
           $version = $match.Groups[1].Value
           Write-Host "Extracted ${{ env.ADDON_ID }} version ""$version"""
           echo "version=$version" >> $env:GITHUB_OUTPUT
-
+          
       #- name: Debug workspace tree
       #  run: |
       #    Write-Host "Workspace:"
@@ -65,15 +47,7 @@ jobs:
           $filePath = Join-Path $addonDefDir "${{ env.ADDON_ID }}.txt"
           Set-Content -Path $filePath -Value "inputstream.adaptive_yt https://github.com/doko-desuka/inputstream.adaptive_yt/ Leia"
           Write-Host "Created addon definition file: $filePath"
-
-      #- name: Install MSVC v141 toolset
-      #  run: |
-      #    & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" `
-      #      modify `
-      #      --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" `
-      #      --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 `
-      #      --quiet --norestart
-
+          
       # Windows 8:
       # - Added CMAKE_SYSTEM_VERSION=6.2
       # - T v142 (should be v141 but not present anymore in Github Actions)
@@ -98,14 +72,14 @@ jobs:
             -DCMAKE_SUPPRESS_DEVELOPER_WARNINGS=ON `
             -Wno-dev `
             "${{ github.workspace }}/xbmc/cmake/addons"
-
+            
       # MSVC params: /m = parallel build?
       #              /v:quiet = less verbosity
       - name: Build Addon
         run: |
           cd build
           cmake --build . --config Release -- /m /v:quiet
-
+          
       #- name: Debug workspace tree
       #  run: |
       #    Write-Host "Workspace:"
