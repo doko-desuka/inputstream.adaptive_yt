@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: addon/${{ env.ADDON_ID }}
+          ref: Leia-dev
 
       - name: Extract Addon Version
         id: get_version
