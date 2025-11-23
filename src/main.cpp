@@ -272,6 +272,13 @@ bool adaptive::AdaptiveTree::download(const char* url,
   if (!file.CURLCreate(url))
     return false;
 
+  // =========================================================
+  // On mobile Android with adaptiveFormats, it sends a fixed payload of "x\u0000" == "x\x00";
+  // However, Kodi requires it to be set as Base64: "eAA="
+  // Relevant code: https://github.com/xbmc/xbmc/blob/Leia/xbmc/filesystem/CurlFile.cpp#L819
+  file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "postdata", "eAA=");
+  // =========================================================
+
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "seekable", "0");
   file.CURLAddOption(ADDON_CURL_OPTION_PROTOCOL, "acceptencoding", "gzip");
 
@@ -2045,6 +2052,7 @@ Session::Session(MANIFEST_TYPE manifestType,
     default:;
   };
 
+  /*
   std::string fn(profile_path_ + "bandwidth.bin");
   FILE* f = fopen(fn.c_str(), "rb");
   if (f)
@@ -2060,6 +2068,8 @@ Session::Session(MANIFEST_TYPE manifestType,
   }
   else
     adaptiveTree_->bandwidth_ = 4000000;
+  */
+  adaptiveTree_->bandwidth_ = 4000000;
   kodi::Log(ADDON_LOG_DEBUG, "Initial bandwidth: %u ", adaptiveTree_->bandwidth_);
 
   max_resolution_ = kodi::GetSettingInt("MAXRESOLUTION");
@@ -2115,6 +2125,7 @@ Session::~Session()
 
   DisposeDecrypter();
 
+  /*
   std::string fn(profile_path_ + "bandwidth.bin");
   FILE* f = fopen(fn.c_str(), "wb");
   if (f)
@@ -2123,6 +2134,7 @@ Session::~Session()
     fwrite((const char*)&val, sizeof(double), 1, f);
     fclose(f);
   }
+  */
   delete adaptiveTree_;
   adaptiveTree_ = nullptr;
 }
