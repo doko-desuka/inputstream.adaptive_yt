@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.adaptive_yt"
-  version="1"
+  version="2"
   name="InputStream Adaptive YouTube"
   provider-name="peak3d etc">
   <requires>@ADDON_DEPENDS@</requires>
